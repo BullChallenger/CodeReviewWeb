@@ -1,0 +1,36 @@
+server:
+  port: 8080
+
+# PostgreSQL
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/project?serverTimezone=UTC
+    username: postgres
+    password: 2982
+
+  thymeleaf:
+    cache: false
+
+  jpa:
+    hibernate:
+      ddl_auto: create
+
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        default_batch_fetch_size: 1000
+
+    devtools:
+      livereload:
+        enabled: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: trace
