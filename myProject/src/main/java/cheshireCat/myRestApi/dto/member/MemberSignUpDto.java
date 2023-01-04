@@ -12,15 +12,15 @@ import javax.validation.constraints.NotNull;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MemberSignUpDto {
     @Email
-    @NotBlank
-    String email;
-    String nickName;
-    @NotBlank
-    String password;
-    @NotBlank
-    String mName;
-    @NotNull
-    Integer age;
+    @NotBlank(message = "이메일은 필수 입력 값입니다.")
+    private String email;
+    private String nickName;
+    @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
+    private String password;
+    @NotBlank(message = "실명은 필수 입력 값입니다.")
+    private String mName;
+    @NotNull(message = "나이는 필수 입력 값입니다.")
+    private Integer age;
     @Builder
     public MemberSignUpDto(String email, String nickName, String password, String mName, Integer age) {
         Assert.hasText(email, "email must not be blank");
