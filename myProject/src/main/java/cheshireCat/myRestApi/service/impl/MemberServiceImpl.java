@@ -8,7 +8,6 @@ import cheshireCat.myRestApi.mapper.MemberUpdateMapper;
 import cheshireCat.myRestApi.repository.MemberRepository;
 import cheshireCat.myRestApi.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.ap.shaded.freemarker.template.utility.SecurityUtilities;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

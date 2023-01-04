@@ -15,16 +15,16 @@ import java.util.List;
 public class Post {
     @Id
     @GeneratedValue
-    @Column(name = "P_ID")
+    @Column(name = "p_id")
     private Long pId;
     @ManyToOne(fetch = FetchType.LAZY)
     private Member pWriter;
-    @Column(name = "TITLE")
+    @Column(name = "title")
     private String title;
     @Lob
-    @Column(name = "P_CONTENT")
+    @Column(name = "p_content")
     private String pContent;
-    @Column(name = "FILE_PATH")
+    @Column(name = "file_path")
     private String filePath;
 
     @Builder

@@ -14,19 +14,19 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment {
     @Id
-    @Column(name = "C_ID")
+    @Column(name = "c_id")
     @GeneratedValue
     private Long cId;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "C_WRITER_ID")
+    @JoinColumn(name = "c_writer_id")
     private Member cWriter;
     @Lob
-    @Column(name = "C_CONTENT")
+    @Column(name = "c_content")
     private String cContent;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PARENT_ID")
+    @JoinColumn(name = "parent_id")
     private Comment parent;
-    @Column(name = "IS_DELETED")
+    @Column(name = "is_deleted")
     private boolean isDeleted;
 
     @Builder
@@ -38,7 +38,7 @@ public class Comment {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "POST_ID")
+    @JoinColumn(name = "post_id")
     private Post post;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "parent")
     private List<Comment> childCommentList = new ArrayList<>();

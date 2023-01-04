@@ -17,20 +17,20 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseTimeEntity {
     @Id
-    @Column(name = "M_ID")
+    @Column(name = "m_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long mId;
-    @Column(name = "EMAIL", nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @Column(name = "NICK_NAME", nullable = false)
+    @Column(name = "nickname", nullable = false)
     private String nickName;
-    @Column(name = "PASSWORD", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
-    @Column(name = "M_NAME", nullable = false)
+    @Column(name = "m_name", nullable = false)
     private String mName;
-    @Column(name = "AGE", nullable = false)
+    @Column(name = "age", nullable = false)
     private int age;
-    @Column(name = "ROLE")
+    @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Role role;
 

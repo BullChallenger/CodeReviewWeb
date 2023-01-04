@@ -3,24 +3,26 @@ package cheshireCat.myRestApi.dto.member;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
+import lombok.Getter;
 import org.springframework.util.Assert;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+@Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class MemberSignUpDto {
     @Email
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
-    private String email;
-    private String nickName;
+    private final String email;
+    private final String nickName;
     @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
-    private String password;
+    private final String password;
     @NotBlank(message = "실명은 필수 입력 값입니다.")
-    private String mName;
+    private final String mName;
     @NotNull(message = "나이는 필수 입력 값입니다.")
-    private Integer age;
+    private final Integer age;
     @Builder
     public MemberSignUpDto(String email, String nickName, String password, String mName, Integer age) {
         Assert.hasText(email, "email must not be blank");
