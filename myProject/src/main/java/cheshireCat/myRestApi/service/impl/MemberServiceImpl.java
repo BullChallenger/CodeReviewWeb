@@ -29,7 +29,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void update(MemberUpdateDto memberUpdateDto) {
-        Member member = memberRepository.findByEmail()
+//        Member member = memberRepository.findByEmail()
     }
 
     private void validateDuplicateMember(Member member) {

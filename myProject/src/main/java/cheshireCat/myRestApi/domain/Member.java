@@ -3,6 +3,7 @@ package cheshireCat.myRestApi.domain;
 import cheshireCat.myRestApi.constant.Role;
 import cheshireCat.myRestApi.dto.member.MemberUpdateDto;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
 
 import javax.persistence.*;
@@ -68,5 +69,9 @@ public class Member extends BaseTimeEntity {
         this.nickName = memberUpdateDto.getNickName();
         this.mName = memberUpdateDto.getMName();
         this.age = memberUpdateDto.getAge();
+    }
+
+    public void encodePassword(PasswordEncoder passwordEncoder) {
+        this.password = passwordEncoder.encode(password);
     }
 }
