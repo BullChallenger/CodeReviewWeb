@@ -3,6 +3,7 @@ package cheshireCat.myRestApi.security.config;
 import cheshireCat.myRestApi.security.filter.JsonUsernamePasswordAuthenticationFilter;
 import cheshireCat.myRestApi.security.handler.JsonAuthenticationFailureHandler;
 import cheshireCat.myRestApi.security.handler.JsonAuthenticationSuccessJWTProvideHandler;
+import cheshireCat.myRestApi.service.LoginService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -21,8 +22,8 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 @RequiredArgsConstructor
 public class JwtSecurityConfig {
 
+    private final LoginService loginService;
     private final ObjectMapper objectMapper;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -32,6 +33,7 @@ public class JwtSecurityConfig {
     public AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setUserDetailsService(loginService);
 
         return new ProviderManager(daoAuthenticationProvider);
     }

@@ -1,7 +1,9 @@
 package cheshireCat.myRestApi.security.filter;
 
 import cheshireCat.myRestApi.dto.member.MemberLoginDto;
+import cheshireCat.myRestApi.service.LoginService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
