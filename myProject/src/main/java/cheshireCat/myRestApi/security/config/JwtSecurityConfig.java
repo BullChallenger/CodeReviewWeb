@@ -1,11 +1,10 @@
 package cheshireCat.myRestApi.security.config;
 
-import cheshireCat.myRestApi.security.filter.JsonEmailPasswordAuthenticationFilter;
+import cheshireCat.myRestApi.security.filter.JsonUsernamePasswordAuthenticationFilter;
 import cheshireCat.myRestApi.security.handler.JsonAuthenticationFailureHandler;
 import cheshireCat.myRestApi.security.handler.JsonAuthenticationSuccessJWTProvideHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -48,18 +47,16 @@ public class JwtSecurityConfig {
     }
 
     @Bean
-    public JsonEmailPasswordAuthenticationFilter jsonEmailPasswordAuthenticationFilter() {
-        JsonEmailPasswordAuthenticationFilter jsonEmailPasswordAuthenticationFilter =
-                new JsonEmailPasswordAuthenticationFilter(objectMapper);
+    public JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter() {
+        JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter =
+                new JsonUsernamePasswordAuthenticationFilter(objectMapper);
 
-        jsonEmailPasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
-        jsonEmailPasswordAuthenticationFilter.setAuthenticationSuccessHandler(jsonAuthenticationSuccessJWTProvideHandler());
-        jsonEmailPasswordAuthenticationFilter.setAuthenticationFailureHandler(jsonAuthenticationFailureHandler());
+        jsonUsernamePasswordAuthenticationFilter.setAuthenticationManager(authenticationManager());
+        jsonUsernamePasswordAuthenticationFilter.setAuthenticationSuccessHandler(jsonAuthenticationSuccessJWTProvideHandler());
+        jsonUsernamePasswordAuthenticationFilter.setAuthenticationFailureHandler(jsonAuthenticationFailureHandler());
 
-        return jsonEmailPasswordAuthenticationFilter;
+        return jsonUsernamePasswordAuthenticationFilter;
     }
-
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -73,7 +70,7 @@ public class JwtSecurityConfig {
                 .antMatchers("/login", "/signUp", "/").permitAll()
                 .anyRequest().authenticated()
         .and()
-                .addFilterAfter(jsonEmailPasswordAuthenticationFilter(), LogoutFilter.class);
+                .addFilterAfter(jsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
 
         return  http.build();
     }

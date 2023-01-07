@@ -1,8 +1,11 @@
 server:
   port: 8080
 
-# PostgreSQL
 spring:
+  main:
+    allow-bean-definition-overriding: true
+
+  # PostgreSQL
   datasource:
     url: jdbc:postgresql://localhost:5432/project?serverTimezone=UTC
     username: postgres

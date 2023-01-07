@@ -3,13 +3,11 @@ package cheshireCat.myRestApi.security.filter;
 import cheshireCat.myRestApi.dto.member.MemberLoginDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StreamUtils;
@@ -22,7 +20,7 @@ import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Component
-public class JsonEmailPasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
     private final ObjectMapper objectMapper;
     public static final String HTTP_METHOD = "POST";
@@ -30,17 +28,21 @@ public class JsonEmailPasswordAuthenticationFilter extends AbstractAuthenticatio
             new AntPathRequestMatcher("/login", HTTP_METHOD);
     private static final String CONTENT_TYPE = "application/json";
 
-    public JsonEmailPasswordAuthenticationFilter(ObjectMapper objectMapper) {
+    public JsonUsernamePasswordAuthenticationFilter(ObjectMapper objectMapper) {
         super(DEFAULT_ANT_PATH_REQUEST_MATCHER);
 
         this.objectMapper = objectMapper;
     }
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException, IOException, ServletException {
+            throws AuthenticationException, IOException {
 
-        if (!request.getMethod().equals(HTTP_METHOD) || !request.getContentType().equals(CONTENT_TYPE)) {
-            log.error("POST 요청이 아니거나 JSON이 아닙니다!");
+        if (!request.getMethod().equals(HTTP_METHOD)) {
+            log.error("POST 요청이 아닙니다!");
+            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+        } else if (!request.getContentType().equals(CONTENT_TYPE)) {
+            log.error("JSON이 아닙니다!");
+            log.error("ContentType : " + request.getContentType());
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
 
@@ -48,10 +50,13 @@ public class JsonEmailPasswordAuthenticationFilter extends AbstractAuthenticatio
 
         MemberLoginDto memberLoginDto = objectMapper.readValue(messageBody, MemberLoginDto.class);
 
-        String email = memberLoginDto.getEmail();
+        String username = memberLoginDto.getEmail();
         String password = memberLoginDto.getPassword();
 
-        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(email, password);
+        log.info("attemptAuthentication username = {}", username);
+        log.info("attemptAuthentication password = {}", password);
+
+        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
 
         setDetails(request, authRequest);
 

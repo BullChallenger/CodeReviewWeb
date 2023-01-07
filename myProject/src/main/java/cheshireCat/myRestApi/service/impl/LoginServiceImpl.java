@@ -17,9 +17,9 @@ public class LoginServiceImpl implements LoginService {
 
     private final MemberRepository memberRepository;
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Member member = memberRepository.findByEmail(email)
+        Member member = memberRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("해당 이메일을 가진 계정이 존재하지 않습니다."));
 
         return User.builder()

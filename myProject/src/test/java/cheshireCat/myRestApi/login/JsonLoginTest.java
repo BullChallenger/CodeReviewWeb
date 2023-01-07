@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -65,25 +66,25 @@ public class JsonLoginTest {
         clear();
     }
 
-    private MemberLoginDto createMemberLoginDto(String email, String password) {
+    private MemberLoginDto createMemberLoginDto() {
         return MemberLoginDto.builder()
-                                .email(email)
-                                .password(password)
+                                .email(EMAIL)
+                                .password(PASSWORD)
                                 .build();
     }
 
     private ResultActions perform(String url, MediaType contentType, MemberLoginDto memberLoginDto) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders
                 .post(url)
-                .contentType(String.valueOf(contentType))
+                .contentType(contentType)
                 .content(objectMapper.writeValueAsString(memberLoginDto)));
     }
 
     @Test
-    @DisplayName("성공_로그인")
+    @DisplayName("[POST]_성공_로그인")
     public void loginTest() throws Exception {
         // given
-        MemberLoginDto memberLoginDto = createMemberLoginDto(EMAIL, PASSWORD);
+        MemberLoginDto memberLoginDto = createMemberLoginDto();
 
         // when, then
         MvcResult result = perform(LOGIN_URL, APPLICATION_JSON, memberLoginDto)
