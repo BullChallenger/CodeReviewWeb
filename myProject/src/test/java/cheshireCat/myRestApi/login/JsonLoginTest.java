@@ -21,8 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
-import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -73,12 +72,41 @@ public class JsonLoginTest {
                                 .build();
     }
 
+    private MemberLoginDto createWrongIdMemberLoginDto() {
+        return MemberLoginDto.builder()
+                .email(EMAIL + "wrong")
+                .password(PASSWORD)
+                .build();
+    }
+
+    private MemberLoginDto createWrongPasswordMemberLoginDto() {
+        return MemberLoginDto.builder()
+                .email(EMAIL)
+                .password(PASSWORD + "wrong")
+                .build();
+    }
+
+
     private ResultActions perform(String url, MediaType contentType, MemberLoginDto memberLoginDto) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders
                 .post(url)
                 .contentType(contentType)
                 .content(objectMapper.writeValueAsString(memberLoginDto)));
     }
+
+    private ResultActions performGet(String url, MediaType contentType, MemberLoginDto memberLoginDto) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders
+                .get(url)
+                .contentType(contentType)
+                .content(objectMapper.writeValueAsString(memberLoginDto)));
+    }
+    private ResultActions performPut(String url, MediaType contentType, MemberLoginDto memberLoginDto) throws Exception {
+        return mockMvc.perform(MockMvcRequestBuilders
+                .put(url)
+                .contentType(contentType)
+                .content(objectMapper.writeValueAsString(memberLoginDto)));
+    }
+
 
     @Test
     @DisplayName("[POST]_성공_로그인")
@@ -88,9 +116,86 @@ public class JsonLoginTest {
 
         // when, then
         MvcResult result = perform(LOGIN_URL, APPLICATION_JSON, memberLoginDto)
+                                                                            .andDo(print())
+                                                                            .andExpect(status().isOk())
+                                                                            .andReturn();
+    }
+
+    @Test
+    @DisplayName("[POST]_실패_로그인_아이디")
+    public void loginTest02() throws Exception {
+        // given
+        MemberLoginDto memberLoginDto = createWrongIdMemberLoginDto();
+
+        // when, then
+        MvcResult result = perform(LOGIN_URL, APPLICATION_JSON, memberLoginDto)
+                                                                            .andDo(print())
+                                                                            .andExpect(status().isBadRequest())
+                                                                            .andReturn();
+    }
+
+    @Test
+    @DisplayName("[POST]_실패_로그인_비밀번호")
+    public void loginTest03() throws Exception {
+        // given
+        MemberLoginDto memberLoginDto = createWrongPasswordMemberLoginDto();
+
+        // when, then
+        MvcResult result = perform(LOGIN_URL, APPLICATION_JSON, memberLoginDto)
                 .andDo(print())
-                .andExpect(status().isOk())
+                .andExpect(status().isBadRequest())
                 .andReturn();
     }
 
+    @Test
+    @DisplayName("[POST]_실패_로그인_잘못된_URL")
+    public void loginTest04() throws Exception {
+        // given
+        MemberLoginDto memberLoginDto = createMemberLoginDto();
+
+        // when, then
+        MvcResult result = perform(LOGIN_URL + "Not", APPLICATION_JSON, memberLoginDto)
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andReturn();
+    }
+
+    @Test
+    @DisplayName("[POST]_실패_로그인_JSON_형식_X")
+    public void loginTest05() throws Exception {
+        // given
+        MemberLoginDto memberLoginDto = createMemberLoginDto();
+
+        // when, then
+        MvcResult result = perform(LOGIN_URL, APPLICATION_GRAPHQL, memberLoginDto)
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andReturn();
+    }
+
+    @Test
+    @DisplayName("[GET]_실패_로그인_잘못된_HTTP_METHOD")
+    public void loginTest06() throws Exception {
+        // given
+        MemberLoginDto memberLoginDto = createMemberLoginDto();
+
+        // when, then
+        MvcResult result = performGet(LOGIN_URL, APPLICATION_GRAPHQL, memberLoginDto)
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
+
+    @Test
+    @DisplayName("[PUT]_실패_로그인_잘못된_HTTP_METHOD")
+    public void loginTest07() throws Exception {
+        // given
+        MemberLoginDto memberLoginDto = createMemberLoginDto();
+
+        // when, then
+        MvcResult result = performPut(LOGIN_URL, APPLICATION_GRAPHQL, memberLoginDto)
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andReturn();
+    }
 }

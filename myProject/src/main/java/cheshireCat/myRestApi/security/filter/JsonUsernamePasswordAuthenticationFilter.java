@@ -40,11 +40,11 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
             throws AuthenticationException, IOException {
 
         if (!request.getMethod().equals(HTTP_METHOD)) {
-            log.error("POST 요청이 아닙니다!");
+//            log.error("POST 요청이 아닙니다!");
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         } else if (!request.getContentType().equals(CONTENT_TYPE)) {
-            log.error("JSON이 아닙니다!");
-            log.error("ContentType : " + request.getContentType());
+//            log.error("JSON이 아닙니다!");
+//            log.error("ContentType : " + request.getContentType());
             throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
 
