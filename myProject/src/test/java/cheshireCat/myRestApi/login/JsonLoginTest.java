@@ -86,8 +86,7 @@ public class JsonLoginTest {
                 .build();
     }
 
-
-    private ResultActions perform(String url, MediaType contentType, MemberLoginDto memberLoginDto) throws Exception {
+    private ResultActions performPost(String url, MediaType contentType, MemberLoginDto memberLoginDto) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders
                 .post(url)
                 .contentType(contentType)
@@ -107,7 +106,6 @@ public class JsonLoginTest {
                 .content(objectMapper.writeValueAsString(memberLoginDto)));
     }
 
-
     @Test
     @DisplayName("[POST]_성공_로그인")
     public void loginTest() throws Exception {
@@ -115,7 +113,7 @@ public class JsonLoginTest {
         MemberLoginDto memberLoginDto = createMemberLoginDto();
 
         // when, then
-        MvcResult result = perform(LOGIN_URL, APPLICATION_JSON, memberLoginDto)
+        MvcResult result = performPost(LOGIN_URL, APPLICATION_JSON, memberLoginDto)
                                                                             .andDo(print())
                                                                             .andExpect(status().isOk())
                                                                             .andReturn();
@@ -128,7 +126,7 @@ public class JsonLoginTest {
         MemberLoginDto memberLoginDto = createWrongIdMemberLoginDto();
 
         // when, then
-        MvcResult result = perform(LOGIN_URL, APPLICATION_JSON, memberLoginDto)
+        MvcResult result = performPost(LOGIN_URL, APPLICATION_JSON, memberLoginDto)
                                                                             .andDo(print())
                                                                             .andExpect(status().isBadRequest())
                                                                             .andReturn();
@@ -141,7 +139,7 @@ public class JsonLoginTest {
         MemberLoginDto memberLoginDto = createWrongPasswordMemberLoginDto();
 
         // when, then
-        MvcResult result = perform(LOGIN_URL, APPLICATION_JSON, memberLoginDto)
+        MvcResult result = performPost(LOGIN_URL, APPLICATION_JSON, memberLoginDto)
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andReturn();
@@ -154,7 +152,7 @@ public class JsonLoginTest {
         MemberLoginDto memberLoginDto = createMemberLoginDto();
 
         // when, then
-        MvcResult result = perform(LOGIN_URL + "Not", APPLICATION_JSON, memberLoginDto)
+        MvcResult result = performPost(LOGIN_URL + "Not", APPLICATION_JSON, memberLoginDto)
                 .andDo(print())
                 .andExpect(status().isForbidden())
                 .andReturn();
@@ -167,7 +165,7 @@ public class JsonLoginTest {
         MemberLoginDto memberLoginDto = createMemberLoginDto();
 
         // when, then
-        MvcResult result = perform(LOGIN_URL, APPLICATION_GRAPHQL, memberLoginDto)
+        MvcResult result = performPost(LOGIN_URL, APPLICATION_GRAPHQL, memberLoginDto)
                 .andDo(print())
                 .andExpect(status().isBadRequest())
                 .andReturn();

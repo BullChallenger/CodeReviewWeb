@@ -1,8 +1,10 @@
 package cheshireCat.myRestApi.security.config;
 
+import cheshireCat.myRestApi.repository.MemberRepository;
 import cheshireCat.myRestApi.security.filter.JsonUsernamePasswordAuthenticationFilter;
 import cheshireCat.myRestApi.security.handler.JsonAuthenticationFailureHandler;
 import cheshireCat.myRestApi.security.handler.JsonAuthenticationSuccessJWTProvideHandler;
+import cheshireCat.myRestApi.security.service.JwtService;
 import cheshireCat.myRestApi.service.LoginService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -25,9 +28,12 @@ public class JwtSecurityConfig {
 
     private final LoginService loginService;
     private final ObjectMapper objectMapper;
+    private final MemberRepository memberRepository;
+    private final JwtService jwtService;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
     @Bean
@@ -41,7 +47,7 @@ public class JwtSecurityConfig {
 
     @Bean
     public JsonAuthenticationSuccessJWTProvideHandler jsonAuthenticationSuccessJWTProvideHandler() {
-        return new JsonAuthenticationSuccessJWTProvideHandler();
+        return new JsonAuthenticationSuccessJWTProvideHandler(jwtService, memberRepository);
     }
 
     @Bean
@@ -62,6 +68,14 @@ public class JwtSecurityConfig {
     }
 
     @Bean
+    public JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter() {
+        JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter =
+                new JwtAuthenticationProcessingFilter(jwtService, memberRepository);
+
+        return jwtAuthenticationProcessingFilter;
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .formLogin().disable()
@@ -73,9 +87,9 @@ public class JwtSecurityConfig {
                 .antMatchers("/login", "/signUp", "/").permitAll()
                 .anyRequest().authenticated()
         .and()
-                .addFilterAfter(jsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
+                .addFilterAfter(jsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class)
+                .addFilterBefore(jwtAuthenticationProcessingFilter(), JsonUsernamePasswordAuthenticationFilter.class);
 
         return  http.build();
     }
-
 }

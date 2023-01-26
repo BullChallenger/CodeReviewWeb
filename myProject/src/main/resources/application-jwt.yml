@@ -1,0 +1,10 @@
+jwt:
+  secret: SlwEyEBsYt9V7zq57TejMnVYyzblYcfPQye08f7MGVK9XkHa
+
+  access:
+    expiration: 80
+    header: Authorization
+
+  refresh:
+    expiration: 90
+    header: Authorization-refresh

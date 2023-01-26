@@ -6,7 +6,7 @@ plugins {
 
 group = 'cheshireCat'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = "16"
+sourceCompatibility = "11"
 
 configurations {
 	compileOnly {
@@ -35,9 +35,12 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+
+	// JWT
+	implementation 'com.auth0:java-jwt:3.18.2'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
-targetCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_11

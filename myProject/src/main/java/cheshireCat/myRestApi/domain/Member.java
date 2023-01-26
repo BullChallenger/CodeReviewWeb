@@ -35,6 +35,9 @@ public class Member extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Column(length = 100)
+    private String refreshToken;
+
     @Builder
     public Member(String email, String nickName, String password, String mName, Integer age, Role role) {
         Assert.hasText(email, "email must not be blank");
@@ -69,6 +72,14 @@ public class Member extends BaseTimeEntity {
         this.nickName = memberUpdateDto.getNickName();
         this.mName = memberUpdateDto.getMName();
         this.age = memberUpdateDto.getAge();
+    }
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+
+    public void destroyRefreshToken() {
+        this.refreshToken = null;
     }
 
     public void encodePassword(PasswordEncoder passwordEncoder) {
